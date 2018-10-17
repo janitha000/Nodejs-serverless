@@ -1,0 +1,92 @@
+
+
+service: rest-api # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
+  timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
+  stage: dev # setting the env stage to dev, this will be visible in the routes
+  region: us-east-1
+
+
+functions:
+
+  verify-token:
+    handler: auth/VerifyToken.auth
+
+  login:
+    handler: auth/AuthHandler.login
+    events:
+      - http:
+          path: login
+          method: post
+          cors: true
+
+  register:
+    handler: auth/AuthHandler.register
+    events:
+      - http:
+          path: register
+          method: post
+          cors: true
+
+  profile:
+    handler: auth/AuthHandler.me
+    events:
+      - http:
+          path: me
+          method: get
+          cors: true
+
+  getUsers:
+    handler: user/UserHandler.getUsers
+    events:
+      - http:
+          path: users
+          method: get
+          cors: true
+
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: notes
+          method: post
+          cors: true
+
+  getOne:
+    handler: handler.getOne
+    events:
+      - http:
+          path: notes/{id}
+          method: get
+          cors: true
+
+  getAll:
+    handler: handler.getAll
+    events:
+      - http:
+          path: notes
+          method: get
+          cors: true
+
+  update:
+    handler: handler.update
+    events:
+      - http:
+          path: notes/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+          cors: true
+
+plugins:
+- serverless-offline
